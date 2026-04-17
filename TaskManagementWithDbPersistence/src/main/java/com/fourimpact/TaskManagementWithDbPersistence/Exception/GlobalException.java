@@ -19,4 +19,14 @@ public class GlobalException {
                 "message", ex.getMessage()
         ));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGeneral(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                "timestamp", LocalDateTime.now(),
+                "status", 500,
+                "error", "Internal Server Error",
+                "message", ex.getMessage()
+        ));
+    }
 }
