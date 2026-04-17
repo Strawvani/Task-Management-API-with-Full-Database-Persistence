@@ -9,6 +9,7 @@ import java.util.List;
 @Table(name = "tag")
 public class Tag {
 
+    // Fields
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
@@ -19,6 +20,7 @@ public class Tag {
     @ManyToMany(mappedBy = "tags")
     private List<Task> tasks = new ArrayList<>();
 
+    // Constructors
     public Tag() {}
 
     public Tag(String name) {
