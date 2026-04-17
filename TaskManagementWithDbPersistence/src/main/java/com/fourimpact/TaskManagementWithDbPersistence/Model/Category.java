@@ -17,7 +17,7 @@ public class Category {
     @Column(name = "name", nullable = false, length = 150)
     private String name;
 
-    @Column(name = "description",columnDefinition = "NVARCHAR(MAX")
+    @Column(name = "description",columnDefinition = "NVARCHAR(MAX)")
     private String description;
 
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
