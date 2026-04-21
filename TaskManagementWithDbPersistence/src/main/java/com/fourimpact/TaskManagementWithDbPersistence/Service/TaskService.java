@@ -2,6 +2,7 @@ package com.fourimpact.TaskManagementWithDbPersistence.Service;
 
 import com.fourimpact.TaskManagementWithDbPersistence.DTO.CreateTaskRequest;
 import com.fourimpact.TaskManagementWithDbPersistence.DTO.TaskResponse;
+import com.fourimpact.TaskManagementWithDbPersistence.Enums.TaskStatus;
 import com.fourimpact.TaskManagementWithDbPersistence.Exception.ResourceNotFoundException;
 import com.fourimpact.TaskManagementWithDbPersistence.Model.Category;
 import com.fourimpact.TaskManagementWithDbPersistence.Model.Task;
@@ -9,7 +10,13 @@ import com.fourimpact.TaskManagementWithDbPersistence.Model.User;
 import com.fourimpact.TaskManagementWithDbPersistence.Repository.CategoryRepository;
 import com.fourimpact.TaskManagementWithDbPersistence.Repository.TaskRepository;
 import com.fourimpact.TaskManagementWithDbPersistence.Repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TaskService {
@@ -45,6 +52,32 @@ public class TaskService {
         task.setUser(user);
         task.setCategory(category);
         return toResponse(taskRepository.save(task));
+    }
+
+    // Read
+    @Transactional(readOnly = true)
+    public Page<TaskResponse> getAllTasks(Pageable pageable){
+        return taskRepository.findAll(pageable).map(this::toResponse);
+
+    }
+
+    @Transactional(readOnly = true)
+    public TaskResponse getTaskById(Long Id){
+        Task task = taskRepository.findById(Id).orElseThrow(
+                () -> new ResourceNotFoundException("task", Id)
+        );
+        return toResponse(task);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TaskResponse> getTaskByStatus(String status, Pageable pageable){
+        TaskStatus taskStatus = TaskStatus.valueOf(status.toUpperCase());
+        return taskRepository.findByStatus(taskStatus, pageable).map(this::toResponse);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<TaskResponse> getTasksByUserId(Long Id, Pageable pageable){
+        return taskRepository.findByUser_Id(Id,pageable).map(this::toResponse);
     }
 
     // Helper
