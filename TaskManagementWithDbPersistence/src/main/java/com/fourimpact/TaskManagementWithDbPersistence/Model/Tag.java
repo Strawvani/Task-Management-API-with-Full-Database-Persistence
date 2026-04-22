@@ -29,6 +29,7 @@ public class Tag {
 
     // Getter and Setters
 
+    public Long getId() {return id;}
 
     public String getName() {
         return name;
@@ -37,4 +38,5 @@ public class Tag {
     public void setName(String name) {
         this.name = name;
     }
+
 }
